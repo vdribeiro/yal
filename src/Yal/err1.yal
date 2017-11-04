@@ -1,0 +1,12 @@
+module err1 {
+
+
+	function a = f1() {
+		a=2;
+	}
+
+	function f2() {
+        f1();  // semantic error: line 9, function "f1" returns scalar
+	}
+
+}

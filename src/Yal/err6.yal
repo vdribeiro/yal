@@ -1,0 +1,12 @@
+module err6 {
+
+
+	function a=f1() {
+		a=2;
+	}
+
+	function c=f2(a, b) {
+        c=f1(a, b);  // semantic error: line 9, function "f1" does not have arguments
+	}
+
+}

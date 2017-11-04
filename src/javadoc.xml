@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="public" author="true" classpath="." destdir="doc" doctitle="yal2jvm" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" source="1.6" sourcefiles="src/CodeGeneration.java,src/SymbolTable.java,src/YalConstants.java,src/Token.java,src/JJTYalState.java,src/ParseException.java,src/YalTreeConstants.java,src/YalTokenManager.java,src/Node.java,src/SimpleCharStream.java,src/SimpleNode.java,src/Declaration.java,src/TokenMgrError.java,src/Function.java,src/Yal.java" sourcepath="src" splitindex="true" use="true" version="true">
+            <link href="file:/C:/Users/Vitor/workspace/COMPILADORES/doc/"/>
+            <link href="http://java.sun.com/javase/6/docs/api/"/>
+        </javadoc>
+    </target>
+</project>

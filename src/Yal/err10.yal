@@ -1,0 +1,12 @@
+module err10 {
+
+    function b[]=f1(a) {
+		b=[100];
+		b[0]=1;
+		b[99]=1;
+	}
+
+	function a=f2(c) {
+        a=f1(c);  // semantic error: line 10, return of function "f1" is an array
+	}
+}

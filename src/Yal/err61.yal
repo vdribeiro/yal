@@ -1,0 +1,17 @@
+module err6 {
+
+
+	function f1(a[]) {
+		b = a+3; // semantic error: "a" identifies an array
+
+		c=[10];
+
+		b = a+c; // semantic error: "a" and "c" are arrays
+
+		c = a; // valid: now both "c" and "a" identify the same array
+
+		a = 10; // semantic error: "a" identifies an array	
+		
+	}
+
+}

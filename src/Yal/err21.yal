@@ -1,0 +1,79 @@
+module err1
+{
+ function f1()
+ {
+
+ }
+
+ function a=f1() // semantic error: function "f1" previous defined
+ {
+ }
+
+ function f1(a, b) // semantic error: function "f1" previous defined
+ {
+ }
+
+ function c=f1(a, b) // semantic error: function "f1" previous defined
+ {
+  c=a+b;
+ }
+
+ function a3=f2(a1, a2[])
+ {
+  a3 = f2(); // semantic error: function "f2" should have two arguments
+ }
+
+ function f3()
+ {
+  a1 = 2;
+  a2 = 3;
+  a3 = f2(a1, a2); // semantic error: second argument of "f2" should be an array
+
+
+  a3 = f2(a1); // semantic error: lack of a second argument
+  a3 = f2(); // semantic error:
+
+  a4 =[10];
+  a3 = f2(a1, a4);
+
+  a3 = f2(a4, a1); // semantic error: types of arguments are not consistent to "f2"
+ }
+
+ function m=f4() // semantic error: "m" would need to be a module attribute or there should be at least a definition of "m" in the body of the function "f4"
+ {
+ }
+
+ function m=f5(a)
+ {
+  m=[a];
+ }
+
+ function f6()
+ {
+  m=[100];
+  m=f5(10);
+
+  a=2;
+  a=f5(10); // semantic error: a used as a scalar and as an array
+  
+  m=[10];
+  m=f5(100);
+ }
+
+ function m=f7(a) // semantic error: m can only be of one typefor every calls of f7: array or scalar
+ {
+  if(a>10) {
+     m=[a];
+  } else {
+    m=2;
+  }
+ }
+
+ function m=f8() // semantic error: function may return without m being initialized
+ {
+  if(a>10) {   // semantic error: "a" is used but was not initialized
+     m=4;
+  }
+ }
+
+}

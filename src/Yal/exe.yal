@@ -1,0 +1,75 @@
+module programa1 {
+
+	data=[100]; // vector of 100 integers
+	
+	a[] = [10]; // the same as a=[10]; (only possible in attributes)
+	a[] = 1; // the same as a = 1; (only possible in attributes)
+	N = 100;
+	b[] = [N]; // N must be a constant and must be
+	// defined before this statement
+	b[] = 1; // assigns 1 to all the elements of b
+	b[0] = 100; // assigns 100 to element 0 of b
+
+function f() {
+	a=[100];
+	size1 = a.size;
+	io.println("number of elements of a: ", size1);
+	a.size = 20; // what is the semantic of this?
+	b = [10];
+	cmp = a < b; // what is the semantic of this?
+	// shall we interpret it as cmp = a.size < b.size;?
+}
+
+function f3() {
+	io.println("aqui");
+}
+
+function f1() {
+	f2();
+	f3();
+}
+
+function f2() {
+	io.println("aqui");
+}
+
+function c=f4(a) {
+	if(a==1) {
+		b=[20];
+	} else {
+		b=2;
+	}
+	c = b; //error - may be scalar or array
+}
+
+function c=f5(a) {
+	if(a==1) {
+		c=3;
+	} else {
+		b=2;
+	}
+	c = b; //error - b may not be initialized
+}
+
+function a[]=f6(b[]) {
+	i = 0;
+	a = [b.size];
+	while(i<b.size) {
+	a[i] = b[i];
+		i = i +1;
+	}
+}
+
+function a[]=f7(N) {
+	a = [N]; // creates an array a with N integers
+	a = 1; // initialize all the N elements of array a with value 1
+}
+
+function main() {
+	det(data);
+
+	io.println("max: ",mx); 
+	io.println("min: ",mn);
+}
+}
+

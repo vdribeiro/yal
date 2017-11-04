@@ -1,0 +1,15 @@
+module err5 {
+
+
+	function f1() {
+		a=2;
+	}
+
+
+
+
+	function f2(a) {
+        f1(a);  // semantic error: line 12, function "f1" does not have arguments
+	}
+
+}

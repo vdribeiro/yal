@@ -1,0 +1,13 @@
+module err2 {
+
+
+
+	function f1() {
+		a=2;
+	}
+
+	function f2() {
+        b=f1();  // semantic error: line 10, function "f1" returns void
+	}
+
+}

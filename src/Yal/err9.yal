@@ -1,0 +1,13 @@
+module err9 {
+
+    b=10;
+
+	function f2(a, c) {
+        a=f1(c, b);  // semantic error: line 6, second argument of function "f1" must be an array
+	}
+	
+	function b=f1(a, c[]) {
+		b=a+c[0];
+	}
+
+}

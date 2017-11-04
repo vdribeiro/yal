@@ -1,0 +1,34 @@
+module err5 {
+
+	a=[20];
+	b;
+
+
+	function f1(a) {
+
+		b=a+2; // "a" is the argument of "f" and not the attribute
+		       // there is no way to refer the attribute "a" in this function
+		       // that would require the use of "err5.a" (not supported)
+		
+		c=[10];
+
+		b=c; // semantic error: "b" identifies a scalar variable
+
+		b=c*a; // semantic error: "c" identifies an array variable
+
+		
+	}
+
+	function f2()
+	{
+                 a = [10];
+		a[10]=3; // semantic error: index of array "a" should be between 0 and 9
+	}
+
+
+	function f3(a[])
+	{
+		b=a.size; // equivalent to the Java code: b=a.length
+	}
+
+}

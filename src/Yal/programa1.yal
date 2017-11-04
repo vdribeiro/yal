@@ -1,0 +1,39 @@
+module programa1 {
+
+	data=[100]; // vector of 100 integers
+	mx=1; // attribute mx
+	mn; // attribute mn
+	c=[12];
+	x[];
+	
+function a=det(d[]) {
+	i=0;
+	M=d.size-1;
+	while(i<M) {
+		a=d[i];
+		i=i+1;
+		b=d[i];
+		mx= library1.max(a,b);
+		mn= library1.min(a,b);
+	}
+}
+
+function a=f2(d) {
+	i=0;
+	M=d;
+	j=1;
+	b=2;
+	while(i<M) {
+		a=d;
+		i=i+1;
+	}
+}
+
+function main() {
+	g=det(data);
+
+	io.println("max: ",mx); 
+	io.println("min: ",mn);
+}
+}
+

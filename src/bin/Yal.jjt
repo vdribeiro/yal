@@ -1,0 +1,292 @@
+/**
+ * JJTree template file created by SF JavaCC plugin 1.5.17+ wizard for JavaCC 1.5.0+
+ */
+options
+{
+  JDK_VERSION = "1.5";
+  static = true;
+  LOOKAHEAD=1;
+}
+
+PARSER_BEGIN(Yal)
+
+import java.io.*;
+import java.util.Scanner;
+
+public class Yal
+{
+  
+  public static void main(String args []) throws ParseException, FileNotFoundException, Exception
+  {
+    Yal parser;
+    String ficheiro=null;
+
+	//testar se tem argumentos
+	if (args.length>0)	{
+	  	if (args.length==1)	  	{
+	  	  	File fx = new File("Yal/" + args[0]);
+			FileInputStream fis = new FileInputStream(fx);
+		    BufferedInputStream bis = new BufferedInputStream(fis);
+		    DataInputStream dis = new DataInputStream(bis);
+		    parser=new Yal(dis);
+		    ficheiro=args[0];
+	  	} else	  	{			System.out.println("Numero de argumentos errado");
+			return;
+	  	}
+	  	
+	} else {
+	  	//Listar directorio e ficheiros
+	    File dir = new File("Yal/");
+	    String[] child = dir.list();
+	    
+	    if (child == null) {
+			System.out.println("Pasta Yal vazia");
+			System.out.println("Colar Exemplo e Clicar Enter");
+			parser=new Yal(System.in);
+		} else {
+		    System.out.println("Ficheiros:");
+		    for (int i=0; i<child.length; i++) {
+		    	System.out.println(i + "-" + child[i]);
+		    }
+		    System.out.println("Escolha o numero do ficheiro:");
+		    Scanner scan = new Scanner(System.in);
+	   		int op=scan.nextInt();
+	   		if ( (op < 0) || (op >= child.length) ) return;
+	
+	   		File fx = new File("Yal/" + child[op]);
+		    FileInputStream fis = new FileInputStream(fx);
+	        BufferedInputStream bis = new BufferedInputStream(fis);
+	        DataInputStream dis = new DataInputStream(bis);
+	        parser=new Yal(dis);
+	        ficheiro=child[op];
+		}
+	}
+	SimpleNode n = parser.Root();
+    try
+    {
+      	System.out.println("\nAST:");
+      	n.dump("");
+
+      	System.out.println("\nANALISES LEXICAL E SINTACTICA CORRECTAS");
+    }
+    catch (Exception e)
+    {
+      	System.out.println("ANALISES LEXICAL E SINTACTICA ERRADAS");
+      	System.out.println(e.getMessage());
+    }
+    
+    SymbolTable sy = new SymbolTable();
+    try    {
+        
+		sy.createSymbolTable(n);
+	
+  		System.out.println("\nFEITO");    } catch (Exception e)    {
+      	System.out.println("\nERRO");    }
+
+	if (!sy.Erro)	{		try
+	    {
+	      	CodeGeneration codeGen = new CodeGeneration(ficheiro.substring(0,ficheiro.length()-4),n,sy);
+	    	codeGen.initCodeGeneration();
+	    } catch (Exception e)
+	    {
+	      	System.out.println("\nERRO NA GERACAO DE CODIGO");
+	    }
+	}
+	else
+	{		System.out.println("NAO FOI POSSIVEL PROCEDER A GERACAO DE CODIGO");
+	}  	
+  }
+}
+
+PARSER_END(Yal)
+
+<DEFAULT> SKIP : {
+	" "
+	| "\t"
+	| "\n"
+	| "\r"
+	| <"//" (~["\n","\r"])* ("\n" | "\r" | "\r\n")>
+	| <"/*" (~["*"])* "*" ("*" | ~["*","/"] (~["*"])* "*")* "/">
+}
+
+/* reserved words */
+<DEFAULT> TOKEN : {
+	<RELA_OP: ">" | "<" | "<=" | ">=" | "==" | "!=">
+	| <ADDSUB_OP: "+" | "-">
+	| <ARITH_OP: "*" | "/" | "<<" | ">>" | ">>>">
+	| <BITWISE_OP: "&" | "|" | "^">
+	| <NOT_OP: "!">
+	| <WHILE: "while">
+	| <IF: "if">
+	| <ELSE: "else">
+	| <ASSIGN: "=">
+	| <ASPA: "\"">
+	| <LPAR: "(">
+	| <RPAR: ")">
+	| <VIRG: ",">
+	| <PVIRG: ";">
+	| <LCHAVETA: "{">
+	| <RCHAVETA: "}">
+	| <FUNCTION: "function">
+	| <MODULE: "module">
+	| <SIZE: "size">
+}
+<DEFAULT> TOKEN : {
+	<INTEGER: (<DIGIT>)+>
+	| <ID: <LETTER> (<LETTER> | <DIGIT>)*>
+	| <#LETTER: ["$","A"-"Z","_","a"-"z"]>
+	| <#DIGIT: ["0"-"9"]>
+	| <STRING: "\"" (["a"-"z","A"-"Z","0"-"9",":"," ","="])+ "\"">
+}
+
+SimpleNode Root():{}
+{
+  	<MODULE> Module() <LCHAVETA> (Declaration())* (Function())* <RCHAVETA> {return jjtThis;}
+}
+
+void Module():{Token t;}
+{
+	t=<ID>{jjtThis.setVal(t.image); jjtThis.setLine(t.beginLine);}
+}
+
+void Declaration():{Token t;}
+{
+	ASElement()
+	(
+	  t=<ASSIGN>{jjtThis.setVal(t.image);  jjtThis.setLine(t.beginLine);}
+	  ( ("[" ArraySize() "]") | Integer() )
+	)? <PVIRG> 
+}
+
+void Integer():{Token t1,t2;}
+{
+	(t1=<ADDSUB_OP>{jjtThis.setVal(t1.image);})? t2=<INTEGER>{jjtThis.addVal(t2.image); jjtThis.setLine(t2.beginLine);}
+}
+
+void Function():{Token t;}
+{
+	<FUNCTION> (LOOKAHEAD(2) FunctionReturn())?
+	t=<ID>{jjtThis.setVal(t.image); jjtThis.setLine(t.beginLine);}
+	<LPAR> ( Varlist() )? <RPAR>
+	<LCHAVETA> Body() <RCHAVETA >
+}
+
+void FunctionReturn():{Token t;}
+{
+	t=<ID>{jjtThis.setVal(t.image); jjtThis.setLine(t.beginLine);} ("[" "]" {jjtThis.addVal("[]");})? <ASSIGN>
+}
+
+void Varlist():{}
+{
+   	(ASElement()) ( <VIRG> (ASElement()))*
+}
+
+void ASElement() #Element:{Token t;}
+{
+  	t=<ID>{jjtThis.setVal(t.image); jjtThis.setLine(t.beginLine);} ("[" "]" {jjtThis.addVal("[]");})?
+}
+
+void Body():{}
+{
+	(Stmt())*  
+}
+
+void Stmt()#void:{}
+{
+  	While() 
+ 	| If()
+ 	| (LOOKAHEAD(3) (Call() <PVIRG>) | (Assign() <PVIRG>) )
+}
+
+void Assign():{Token t;}
+{
+  	ASAccess() t=<ASSIGN> {jjtThis.setVal("="); jjtThis.setLine(t.beginLine);}
+  	(
+  	  ("[" ArraySize() "]")
+  	  | Operation()
+  	)
+}
+
+void Operation():{Token t;}
+{
+  	Term()
+  	(  
+  	  (
+  	    t=<ARITH_OP>{jjtThis.setVal(t.image); jjtThis.setLine(t.beginLine);}
+  	    | t=<BITWISE_OP>{jjtThis.setVal(t.image); jjtThis.setLine(t.beginLine);}
+  	    | t=<ADDSUB_OP>{jjtThis.setVal(t.image); jjtThis.setLine(t.beginLine);}
+  	  )
+	  Term()
+ 	)*
+ 	{
+ 	  if(jjtThis.val == null) { 	  	jjtThis.setVal("bypassnode");
+ 	  	jjtThis.setBypass(true);
+ 	  }
+ 	}
+}
+
+void ArraySize():{Token t1,t2;}
+{
+   	(
+   	  t1=<ID>{jjtThis.setVal(t1.image); jjtThis.setLine(t1.beginLine);}
+   	  ( "." t2=<SIZE>{jjtThis.addVal("." + t2.image);} )?
+   	)
+   	| (t1=<INTEGER>{jjtThis.setVal(t1.image); jjtThis.setLine(t1.beginLine);})
+}
+
+void Term() #void:{}
+{
+	(LOOKAHEAD(2) Integer() | (LOOKAHEAD(4) Call() | ASAccess() ) )
+}
+
+void Exprtest() #Condition :{Token t;}
+{
+	<LPAR> Term() t=<RELA_OP>{jjtThis.setVal(t.image); jjtThis.setLine(t.beginLine);} Term() <RPAR>  
+}
+
+void While():{Token t;}
+{
+	t=<WHILE>{jjtThis.setLine(t.beginLine);} Exprtest() <LCHAVETA> Body() <RCHAVETA> 
+}
+
+void If():{Token t;}
+{
+	t=<IF>{jjtThis.setLine(t.beginLine);} Exprtest() <LCHAVETA> Body() <RCHAVETA>
+	( <ELSE> <LCHAVETA>	Body() <RCHAVETA> )? //| ( <ELSE> If())
+}
+
+void Call() #Call:{Token t1,t2,t3;}
+{
+  	((t1=<ADDSUB_OP>{jjtThis.setVal(t1.image);} )?)
+  	(t2=<ID>{jjtThis.addVal(t2.image); jjtThis.setLine(t2.beginLine);}
+  	("." t3=<ID>{jjtThis.addVal("." + t3.image);})? 
+	<LPAR> (ArgumentList())? <RPAR>) 
+}
+
+void ArgumentList():{}
+{
+	Argument() ( <VIRG> Argument() )* 
+}
+
+void Argument():{Token t;}
+{
+  	( t=<ID>{jjtThis.setVal(t.image); jjtThis.setLine(t.beginLine);} |
+  	t=<STRING>{jjtThis.setVal(t.image); jjtThis.setLine(t.beginLine);} |
+  	t=<INTEGER>{jjtThis.setVal(t.image); jjtThis.setLine(t.beginLine);} ) 
+}
+
+void ASAccess() #Access:{Token t1,t2,t3;}
+{
+  	((t1=<ADDSUB_OP>{jjtThis.setVal(t1.image);} )?)
+	(t2=<ID>{jjtThis.addVal(t2.image); jjtThis.setLine(t2.beginLine);}
+	(
+	  ( "[" Index() "]" ) |
+	  ( "." t3=<SIZE>{jjtThis.addVal("." + t3.image);} )?
+	))
+}
+
+void Index():{Token t1,t2;}
+{
+  	t1=<ID>{jjtThis.setVal(t1.image); jjtThis.setLine(t1.beginLine);}
+  	| t2=<INTEGER>{jjtThis.setVal(t2.image); jjtThis.setLine(t2.beginLine);}
+}

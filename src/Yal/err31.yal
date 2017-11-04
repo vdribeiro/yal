@@ -1,0 +1,24 @@
+module err3 {
+
+	b;
+
+	function f(a) {
+		c = a+b;
+		c = c+d; // semantic error: d was never defined
+
+		e=[10];
+
+		f(e);
+		f(1,2);
+		f = e; // correct semantic of Java: both "f" and "e" refer to the same array
+
+		f[0] = 20;
+
+		f[10] = 20; // semantic error: array index exceeds upper bound
+
+		f = 3; // semantic error: "f" has been defined as an array variable
+
+		e = 3; // semantic error: "e" has been defined as an array variable
+
+	}
+}

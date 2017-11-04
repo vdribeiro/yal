@@ -1,0 +1,56 @@
+module err4 {
+
+
+	function f(a) {
+		
+		while(a<10) 
+		{
+			b = 2;
+			a=a+1;
+		}
+		
+		c = b*2; // semantic error: "b" may reach the expression unitialized
+
+		a=0;
+		while(a<10) 
+		{
+			b = 2;
+			a=a+1;
+		}
+		
+		c = b*2; // semantic error: "b" may reach the expression unitialized
+			 // i.e., the compiler will not determine if the while will
+			 // execute at least one iteration
+		
+	}
+
+	function g(a) {
+		
+		if(a<10) 
+		{
+			b = 2;
+		}
+		
+		c = b*2; // semantic error: "b" may reach the expression unitialized
+
+		a=0;
+		if(a<10) 
+		{
+			b = 2;
+		}
+		
+		c = b*2; // semantic error: "b" may reach the expression unitialized
+			 // i.e., the compiler will not determine if the if condition will
+			 // always evaluate true
+
+		if(a<10) 
+		{
+			b = 2;
+		} else {
+			b = 3;
+		}
+		
+		c = b*2;
+		
+	}
+}

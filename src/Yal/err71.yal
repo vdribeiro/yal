@@ -1,0 +1,32 @@
+module err67 {
+
+   function m=f1(a, b[]) {
+      m = 1;
+      if(a==[3]) { // semantic error, similar if while instead of if
+         m=2;
+      }
+
+      if(a[3]==[3]) { // semantic error, similar if while instead of if
+         m=2;
+      }
+
+      if(b==[3]) { // size of b equals 3?
+         m=2;
+      }
+   }
+
+   function m=f2(a[],b[],c) {
+      m = 1;
+      if(a>b) { // semantic error, similar if while instead of if
+         m=2;
+      }
+
+      if(a==c) { // semantic error, similar if while instead of if
+         m=2;
+      }
+
+      if(a==b) { // semantic error, similar if while instead of if
+         m=2;
+      }
+   }
+}
